@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Animals - Tebak Hewan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8f9fa;
+            --card: #ffffff;
+            --primary: #2d3436;
+            --accent: #00b894;
+            --wrong: #ff7675;
+            --text: #636e72;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: var(--card);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        h1 { font-weight: 600; letter-spacing: -1px; margin-bottom: 5px; }
+        .score-board { font-size: 0.9rem; color: var(--text); margin-bottom: 20px; }
+
+        .image-container {
+            width: 100%;
+            height: 250px;
+            background: #eee;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        button {
+            padding: 12px;
+            border: 1.5px solid #eee;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        button:hover { background: var(--bg); border-color: var(--primary); }
+        
+        .hint-btn {
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 0.8rem;
+            margin-top: 15px;
+            text-decoration: underline;
+        }
+
+        .stats { margin-top: 20px; font-size: 0.8rem; opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Quiz Animals</h1>
+    <div class="score-board">Sisa Hewan: <span id="remaining">0</span></div>
+
+    <div class="image-container">
+        <img id="animal-img" src="" alt="Tebak Hewan">
+    </div>
+
+    <div class="options-grid" id="options">
+        </div>
+
+    <button class="hint-btn" onclick="showHint()">Butuh petunjuk?</button>
+    <div class="stats" id="hint-text"></div>
+</div>
+
+<script>
+    // Database nama hewan (Bisa dikembangkan hingga 1000+)
+    const landAnimals = ["Gajah", "Singa", "Zebra", "Jerapah", "Harimau", "Serigala", "Orangutan", "Kuda Nil", "Kangguru", "Panda"];
+    const seaAnimals = ["Hiu", "Paus", "Lumba-lumba", "Ubur-ubur", "Pari", "Kuda Laut", "Gurita", "Anjing Laut", "Penyu", "Kepiting"];
+    
+    let allAnimals = [...landAnimals, ...seaAnimals];
+    let currentAnimal = "";
+    let currentIndex = 0;
+
+    function initGame() {
+        if (allAnimals.length === 0) {
+            document.querySelector(".container").innerHTML = "<h2>Selamat! Kamu mengenal semua hewan!</h2>";
+            return;
+        }
+        
+        document.getElementById("remaining").innerText = allAnimals.length;
+        document.getElementById("hint-text").innerText = "";
+        
+        // Pilih hewan acak
+        const randomIndex = Math.floor(Math.random() * allAnimals.length);
+        currentAnimal = allAnimals[randomIndex];
+        
+        // Load Gambar HD dari Unsplash
+        const imgElement = document.getElementById("animal-img");
+        imgElement.src = `https://source.unsplash.com/featured/?${currentAnimal},animal`;
+
+        generateOptions();
+    }
+
+    function generateOptions() {
+        const optionsContainer = document.getElementById("options");
+        optionsContainer.innerHTML = "";
+        
+        // Buat pilihan jawaban (1 benar, 3 salah)
+        let choices = [currentAnimal];
+        while (choices.length < 4) {
+            let randomFake = [...landAnimals, ...seaAnimals][Math.floor(Math.random() * 20)];
+            if (!choices.includes(randomFake)) choices.push(randomFake);
+        }
+        
+        // Acak posisi tombol
+        choices.sort(() => Math.random() - 0.5);
+
+        choices.forEach(choice => {
+            const btn = document.createElement("button");
+            btn.innerText = choice;
+            btn.onclick = () => checkAnswer(choice);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selected) {
+        if (selected === currentAnimal) {
+            alert("Tepat Sekali!");
+            // Hapus hewan dari list agar tidak muncul lagi
+            allAnimals = allAnimals.filter(a => a !== currentAnimal);
+        } else {
+            alert("Salah! Coba lagi nanti.");
+        }
+        initGame(); // Render soal baru (acak)
+    }
+
+    function showHint() {
+        const type = landAnimals.includes(currentAnimal) ? "Habitat: Darat" : "Habitat: Laut";
+        document.getElementById("hint-text").innerText = type;
+    }
+
+    // Jalankan game saat load
+    window.onload = initGame;
+</script>
+
+</body>
+</html>
