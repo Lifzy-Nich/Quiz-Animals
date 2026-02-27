@@ -1,514 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz Animals · tebak gambar</title>
-  <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  }
-      body {
-  background: linear-gradient(145deg, #f0f3f7 0%, #f8fafd 100%);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1.5rem;
-      }
-      .quiz-card {
-  max-width: 860px;
-  width: 100%;
-  background: rgba(255,255,255,0.7);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-radius: 3rem;
-  box-shadow: 0 20px 40px -12px rgba(0,20,30,0.25),
-              inset 0 1px 2px rgba(255,255,255,0.8);
-  padding: 2.2rem 2rem 2.5rem 2rem;
-  border: 1px solid rgba(255,255,255,0.5);
-  transition: all 0.2s ease;
-      }
-      .header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 1.8rem;
-  flex-wrap: wrap;
-  gap: 0.8rem 1.5rem;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Animals - Minimalist Edition</title>
+    <style>
+        :root {
+            --bg: #f8f9fa;
+            --accent: #556b2f; /* Sage Green */
+            --text: #2d3436;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        h1 { font-weight: 300; letter-spacing: 2px; margin-bottom: 30px; }
+        
+        /* Container Gambar */
+        #quiz-container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        .animal-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
 
-.header h1 {
-  font-size: 2.4rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  color: #1e2b3c;
-  text-shadow: 0 2px 3px rgba(255,255,255,0.7);
-  background: rgba(255,255,255,0.5);
-  padding: 0.2rem 1.4rem 0.2rem 1.8rem;
-  border-radius: 60px;
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255,255,255,0.8);
-  display: inline-block;
-}
-      .stats {
-  display: flex;
-  gap: 0.7rem;
-  font-weight: 450;
-  background: rgba(230, 240, 250, 0.6);
-  backdrop-filter: blur(4px);
-  padding: 0.55rem 1.2rem;
-  border-radius: 40px;
-  border: 1px solid rgba(255,255,255,0.6);
-  color: #1a3b4e;
-}
+        /* Tombol Pilihan */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        button {
+            padding: 15px;
+            border: 1px solid #eee;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        button:hover { background: var(--accent); color: white; border-color: var(--accent); }
 
-.stats span {
-  background: white;
-  padding: 0.2rem 1rem;
-  border-radius: 30px;
-  font-weight: 500;
-  color: #0f3448;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-}
-      .image-panel {
-  background: #cddbe9b3;
-  border-radius: 2.2rem;
-  padding: 1.6rem;
-  backdrop-filter: blur(4px);
-  box-shadow: inset 0 1px 4px #ffffffd0, 0 12px 24px -16px #2b4a5e;
-  border: 1px solid rgba(255,255,255,0.7);
-  margin-bottom: 2rem;
-}
-
-.image-container {
-  background: #eef3f8;
-  border-radius: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1.5rem 1rem;
-  border: 2px solid white;
-  box-shadow: 0 6px 14px rgba(43, 60, 80, 0.1);
-  min-height: 260px;
-}
-      .animal-img {
-  max-width: 100%;
-  max-height: 260px;
-  border-radius: 24px;
-  object-fit: contain;
-  filter: drop-shadow(0 10px 12px rgba(0,20,30,0.15));
-  transition: opacity 0.2s;
-  background: #f5faff;
-}
-
-.placeholder-img {
-  width: 360px;
-  height: 200px;
-  background: linear-gradient(145deg, #d9e2ec, #cbd5e1);
-  border-radius: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #43657b;
-  font-weight: 400;
-  font-size: 1.2rem;
-  border: 2px dashed #a0bbcf;
-}
-      .hint-box {
-  margin-top: 1.4rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: #ffffffc4;
-  border-radius: 60px;
-  padding: 0.5rem 1.8rem 0.5rem 1.2rem;
-  border: 1px solid white;
-  width: fit-content;
-  backdrop-filter: blur(2px);
-}
-
-.hint-icon {
-  font-size: 1.5rem;
-  background: #2b5f7a;
-  color: white;
-  width: 42px;
-  height: 42px;
-  border-radius: 42px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 6px 12px #2b5f7a40;
-}
-
-.hint-text {
-  color: #1f3d51;
-  font-weight: 460;
-  font-size: 1.15rem;
-  border-left: 2px solid #cddeee;
-  padding-left: 1rem;
-}
-      .options-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
-  margin: 2rem 0 1.5rem;
-}
-
-.option-btn {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255,255,255,0.9);
-  border-radius: 60px;
-  padding: 1rem 0.8rem;
-  font-size: 1.25rem;
-  font-weight: 480;
-  color: #1f3b4c;
-  box-shadow: 0 6px 10px rgba(57, 87, 107, 0.08);
-  transition: all 0.15s;
-  cursor: pointer;
-  text-align: center;
-  letter-spacing: 0.3px;
-  border-bottom: 3px solid transparent;
-}
-      .option-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.98);
-  border-color: #9bc0d9;
-  box-shadow: 0 10px 20px -10px #2a5f7a;
-  transform: scale(1.01);
-  border-bottom-color: #6799b9;
-}
-
-.option-btn:active:not(:disabled) {
-  transform: scale(0.98);
-}
-
-.option-btn.correct-guess {
-  background: #b1e0d7;
-  border-color: #308a7c;
-  color: #16594d;
-  font-weight: 500;
-  border-bottom-color: #1f6c5e;
-  pointer-events: none;
-  opacity: 0.8;
-  text-decoration: line-through 2px #1b6b5d50;
-}
-
-.option-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  filter: grayscale(0.2);
-}
-      .feedback-area {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.message {
-  background: #ffffffd9;
-  backdrop-filter: blur(4px);
-  padding: 0.7rem 1.8rem;
-  border-radius: 60px;
-  font-weight: 460;
-  color: #1a3a47;
-  border: 1px solid white;
-  font-size: 1.1rem;
-}
-      .next-btn {
-  background: #254e65;
-  border: none;
-  padding: 0.8rem 2.4rem;
-  border-radius: 50px;
-  font-size: 1.2rem;
-  font-weight: 480;
-  color: white;
-  box-shadow: 0 12px 18px -10px #1b4457;
-  cursor: pointer;
-  backdrop-filter: blur(4px);
-  border: 1px solid #5790ab;
-  transition: 0.1s;
-  letter-spacing: 0.4px;
-}
-
-.next-btn:hover {
-  background: #2d5f7c;
-  box-shadow: 0 16px 22px -12px #1f485e;
-  transform: scale(1.02);
-}
-
-.next-btn:active {
-  transform: scale(0.97);
-}
-
-.small-note {
-  color: #4b6579;
-  margin-top: 1.5rem;
-  font-size: 0.9rem;
-  text-align: right;
-  border-top: 2px dashed #aac0d3;
-  padding-top: 1.2rem;
-  opacity: 0.8;
-}
-          .footer-stats {
-      display: flex;
-      gap: 0.8rem;
-      background: #e5eef7b3;
-      border-radius: 60px;
-      padding: 0.4rem 1.5rem;
-      align-items: center;
-    }
-  </style>
+        /* Fitur Hint */
+        #hint-btn { margin-top: 20px; background: none; border: none; color: #888; text-decoration: underline; font-size: 0.9rem; }
+    </style>
 </head>
 <body>
-<div class="quiz-card">
-  <div class="header">
-    <h1>🦓 Quiz Animals</h1>
-    <div class="stats">
-      <span id="remaining-counter">2000</span> tersisa
-      <span id="correct-counter">0</span> terjawab
+
+    <h1>QUIZ ANIMALS</h1>
+
+    <div id="quiz-container">
+        <img id="animal-display" class="animal-img" src="" alt="Tebak Hewan">
+        <div id="hint-text" style="display:none; margin-bottom: 10px; font-style: italic; color: var(--accent);"></div>
+        <div class="options-grid" id="options">
+            </div>
+        <button id="hint-btn" onclick="showHint()">Butuh bantuan? (Hint)</button>
     </div>
-  </div>
-  <div class="image-panel">
-  <div class="image-container" id="imageContainer">
-    <img id="animalImage" class="animal-img" src="https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=400&q=85" alt="hewan">
-  </div>
-  <div class="hint-box">
-    <span class="hint-icon">💡</span>
-    <span class="hint-text" id="hintText">habitat: darat · kaki empat</span>
-  </div>
-  </div>
-    <div class="options-grid" id="optionsContainer"></div>
 
-  <div class="feedback-area">
-    <div class="message" id="feedbackMsg">Pilih salah satu opsi</div>
-    <button class="next-btn" id="nextBtn">⟳  berikutnya</button>
-  </div>
+    <script>
+        // Contoh Data (Bisa diperluas hingga 2000+ data)
+        let animals = [
+            { id: 1, name: "Narwhal", type: "Laut", hint: "Memiliki tanduk panjang seperti unicorn.", img: "https://source.unsplash.com/800x600/?narwhal" },
+            { id: 2, name: "Okapi", type: "Darat", hint: "Kerabat jerapah tapi kaki bergaris zebra.", img: "https://source.unsplash.com/800x600/?okapi" },
+            // Tambahkan data hewan lainnya di sini
+        ];
 
-  <div class="small-note">
-    <span>🐾 1000+ gambar darat · 1000+ laut —高清 HD tanpa cacat</span>
-  </div>
-</div>
-<script>
-(function() {
-  // Database HEWAN DARAT (bagian 1 dari 3)
-  const daratBins = [
-    { name: 'singa', habitat: 'darat', hint: 'kucing besar, raja hutan', img: 'https://images.unsplash.com/photo-1618641662184-bafefb91a542?w=400&q=85' },
-    { name: 'gajah', habitat: 'darat', hint: 'belalai panjang, telinga lebar', img: 'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=400&q=85' },
-    { name: 'harimau', habitat: 'darat', hint: 'berbelang oranye-hitam', img: 'https://images.pexels.com/photos/792381/pexels-photo-792381.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop' },
-    { name: 'jerapah', habitat: 'darat', hint: 'leher sangat panjang', img: 'https://images.unsplash.com/photo-1547721064-da6cfb341d50?w=400&q=85' },
-    { name: 'badak', habitat: 'darat', hint: 'cula di hidung, kulit tebal', img: 'https://images.pexels.com/photos/5471142/pexels-photo-5471142.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop' },
-  ];
-    // Database HEWAN DARAT (bagian 2 dari 3)
-const daratBins2 = [
-  { name: 'zebra', habitat: 'darat', hint: 'bergaris hitam putih', img: 'https://images.unsplash.com/photo-1508713246393-2bf50389a7b8?w=400&q=85' },
-  { name: 'kuda', habitat: 'darat', hint: 'ditunggangi, berlari kencang', img: 'https://images.unsplash.com/photo-1553284965-83fd3e82fa5d?w=400&q=85' },
-  { name: 'kanguru', habitat: 'darat', hint: 'berkantung, melompat', img: 'https://images.pexels.com/photos/750573/pexels-photo-750573.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop' },
-  { name: 'panda', habitat: 'darat', hint: 'hitam putih, suka bambu', img: 'https://images.unsplash.com/photo-1564349683136-77e08dba1f27?w=400&q=85' },
-  { name: 'koala', habitat: 'darat', hint: 'pohon eukaliptus, tidur lama', img: 'https://images.pexels.com/photos/356378/pexels-photo-356378.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop' },
-];
-    // Database HEWAN DARAT (bagian 3 dari 3)
-const daratBins3 = [
-  { name: 'serigala', habitat: 'darat', hint: 'mirip anjing liar', img: 'https://images.unsplash.com/photo-1592627693350-577c0d3dc771?w=400&q=85' },
-  { name: 'rubah', habitat: 'darat', hint: 'ekor lebat, cerdik', img: 'https://images.pexels.com/photos/158340/fox-wildlife-animal-nature-158340.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop' },
-  { name: 'kijang', habitat: 'darat', hint: 'tanduk bercabang, lincah', img: 'https://images.unsplash.com/photo-1471019668828-de7a1ae5fbfb?w=400&q=85' },
-  { name: 'orangutan', habitat: 'darat', hint: 'primate merah, hutan', img: 'https://images.pexels.com/photos/416975/pexels-photo-416975.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop' },
-  { name: 'gorila', habitat: 'darat', hint: 'kera besar, kuat', img: 'https://images.unsplash.com/photo-1561731216-c12a0776b7cb?w=400&q=85' },
-];
+        let masterList = [...animals]; // Database utama
 
-// Gabungkan semua database darat
-const daratBinsGabungan = [...daratBins, ...daratBins2, ...daratBins3];
-    // Database HEWAN LAUT (bagian 1 dari 3)
-const lautBins = [
-  { name: 'lumba-lumba', habitat: 'laut', hint: 'pintar, suka melompat', img: 'https://images.unsplash.com/photo-1607153311901-85c95da4a4f4?w=400&q=85' },
-  { name: 'paus biru', habitat: 'laut', hint: 'mamalia terbesar', img: 'https://images.pexels.com/photos/4666749/pexels-photo-4666749.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop' },
-  { name: 'hiu putih', habitat: 'laut', hint: 'pemangsa, sirip tajam', img: 'https://images.unsplash.com/photo-1560274370-864b6f8fbc1b?w=400&q=85' },
-  { name: 'penyu', habitat: 'laut', hint: 'berumur panjang, tempurung', img: 'https://images.pexels.com/photos/847393/pexels-photo-847393.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop' },
-  { name: 'bintang laut', habitat: 'laut', hint: 'bentuk bintang, di dasar laut', img: 'https://images.unsplash.com/photo-1504219758799-15527ec6cf56?w=400&q=85' },
-];
-    // Database HEWAN LAUT (bagian 2 dari 3)
-const lautBins2 = [
-  { name: 'gurita', habitat: 'laut', hint: 'delapan lengan, pintar', img: 'https://images.pexels.com/photos/4574317/pexels-photo-4574317.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop' },
-  { name: 'kuda laut', habitat: 'laut', hint: 'kepala mirip kuda, kecil', img: 'https://images.unsplash.com/photo-1554244865-3474b2613d7a?w=400&q=85' },
-  { name: 'ubur-ubur', habitat: 'laut', hint: 'transparan, menyengat', img: 'https://images.pexels.com/photos/3752738/pexels-photo-3752738.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop' },
-  { name: 'singa laut', habitat: 'laut', hint: 'berkumis, suka berjemur', img: 'https://images.unsplash.com/photo-1560090995-01632a28895b?w=400&q=85' },
-  { name: 'anjing laut', habitat: 'laut', hint: 'berbulu, sirip', img: 'https://images.pexels.com/photos/4666735/pexels-photo-4666735.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop' },
-];
-    // Database HEWAN LAUT (bagian 3 dari 3)
-const lautBins3 = [
-  { name: 'pari manta', habitat: 'laut', hint: 'pipih, lebar, terbang di air', img: 'https://images.unsplash.com/photo-1570481662006-a3a1374699e8?w=400&q=85' },
-  { name: 'belut laut', habitat: 'laut', hint: 'panjang seperti ular', img: 'https://images.pexels.com/photos/712537/pexels-photo-712537.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop' },
-  { name: 'kepiting', habitat: 'laut', hint: 'berjalan menyamping, capit', img: 'https://images.unsplash.com/photo-1592754868996-4e282b9e9b6a?w=400&q=85' },
-  { name: 'lobster', habitat: 'laut', hint: 'ber capit besar, merah', img: 'https://images.pexels.com/photos/2529368/pexels-photo-2529368.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop' },
-  { name: 'narwhal', habitat: 'laut', hint: 'paus bertanduk panjang', img: 'https://images.unsplash.com/photo-1574786236130-7b3d0e943a7b?w=400&q=85' },
-];
+        function loadQuestion() {
+            if (masterList.length === 0) {
+                document.getElementById('quiz-container').innerHTML = "<h2>Selamat! Kamu mengenal semua hewan.</h2>";
+                return;
+            }
 
-// Gabungkan semua database laut
-const lautBinsGabungan = [...lautBins, ...lautBins2, ...lautBins3];
-    // Fungsi untuk memperbanyak database hingga 1000+
-function perbanyakBank(baseArray, targetCount, type) {
-  const result = [];
-  for (let i = 0; i < targetCount; i++) {
-    const base = baseArray[i % baseArray.length];
-    let newImg = base.img;
-    if (newImg.includes('?')) newImg = base.img.split('?')[0] + `?w=400&q=85&sig=${i}${type}`;
-    else newImg = base.img + `?w=400&q=85&sig=${i}${type}`;
+            const randomIndex = Math.floor(Math.random() * masterList.length);
+            const currentAnimal = masterList[randomIndex];
 
-    result.push({
-      name: base.name + (i > baseArray.length ? ` ${Math.floor(i/27)}` : ''),
-      habitat: base.habitat,
-      hint: base.hint + (i % 3 === 0 ? ' (varian)' : ''),
-      img: newImg
-    });
-  }
-  return result;
-}
+            document.getElementById('animal-display').src = currentAnimal.img;
+            document.getElementById('hint-text').style.display = 'none';
+            document.getElementById('hint-text').innerText = "Hint: " + currentAnimal.hint;
 
-// Bangun 1000+ darat & 1000+ laut
-let daratFull = perbanyakBank(daratBinsGabungan, 1050, 'darat');
-let lautFull = perbanyakBank(lautBinsGabungan, 1050, 'laut');
-    // Gabung semua hewan
-let masterList = [...daratFull, ...lautFull];
+            // Logika Options (Acak jawaban)
+            const options = [currentAnimal.name, "Singa", "Paus Biru", "Kuda Nil"]; // Placeholder salah
+            const shuffledOptions = options.sort(() => Math.random() - 0.5);
 
-// Fungsi mengacak array
-function shuffleArray(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-    // State global
-let currentAnimal = null;
-let remainingIds = [];
-let correctCount = 0;
-let lock = false;
-let correctAnswerName = '';
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = "";
+            shuffledOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt, currentAnimal.name, randomIndex);
+                optionsDiv.appendChild(btn);
+            });
+        }
 
-// Masukkan semua index ke remaining
-for (let i = 0; i < masterList.length; i++) remainingIds.push(i);
+        function checkAnswer(selected, correct, index) {
+            if (selected === correct) {
+                alert("Benar! Hewan ini tidak akan muncul lagi.");
+                masterList.splice(index, 1); // Hapus dari daftar jika benar
+            } else {
+                alert("Salah! Coba lagi nanti.");
+            }
+            loadQuestion(); // Muat pertanyaan baru (random)
+        }
 
-// Pilih hewan acak dari remaining
-function pickRandomAnimal() {
-  if (remainingIds.length === 0) {
-    return null;
-  }
-  const randIdx = Math.floor(Math.random() * remainingIds.length);
-  const animalIndex = remainingIds[randIdx];
-  return { ...masterList[animalIndex], index: animalIndex };
-}
-    // Render hewan baru
-function renderNewQuestion() {
-  if (remainingIds.length === 0) {
-    document.getElementById('animalImage').src = 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=400&q=85';
-    document.getElementById('hintText').innerText = '✨ semua sudah terjawab!';
-    document.getElementById('optionsContainer').innerHTML = '';
-    document.getElementById('feedbackMsg').innerText = 'selamat! anda menyelesaikan kuis';
-    document.getElementById('nextBtn').disabled = false;
-    lock = true;
-    return;
-  }
+        function showHint() {
+            document.getElementById('hint-text').style.display = 'block';
+        }
 
-  const animal = pickRandomAnimal();
-  if (!animal) return;
-  currentAnimal = animal;
-  correctAnswerName = animal.name;
-
-  document.getElementById('animalImage').src = animal.img;
-  document.getElementById('hintText').innerText = `💬 ${animal.hint} · (${animal.habitat})`;
-      // Buat 4 opsi (1 benar + 3 salah)
-  let options = [animal.name];
-  let otherNames = [];
-  while (otherNames.length < 3) {
-    const rand = Math.floor(Math.random() * masterList.length);
-    const candidate = masterList[rand].name;
-    if (!options.includes(candidate) && !otherNames.includes(candidate)) {
-      otherNames.push(candidate);
-    }
-  }
-  options = [...options, ...otherNames];
-  options = shuffleArray(options);
-
-  // Render tombol opsi
-  const container = document.getElementById('optionsContainer');
-  container.innerHTML = '';
-  options.forEach(opt => {
-    const btn = document.createElement('div');
-    btn.className = 'option-btn';
-    btn.innerText = opt;
-    btn.dataset.name = opt;
-    btn.addEventListener('click', () => handleOptionClick(opt, btn));
-    container.appendChild(btn);
-  });
-
-  document.getElementById('feedbackMsg').innerText = 'pilih jawaban...';
-  lock = false;
-  updateStatsDisplay();
-}
-    // Handle klik opsi
-function handleOptionClick(selectedName, btnElement) {
-  if (lock) {
-    document.getElementById('feedbackMsg').innerText = '⏳ sudah menjawab, lanjut ke berikutnya';
-    return;
-  }
-  if (!currentAnimal) return;
-
-  const isCorrect = (selectedName === correctAnswerName);
-  const allButtons = document.querySelectorAll('.option-btn');
-
-  if (isCorrect) {
-    allButtons.forEach(b => {
-      if (b.dataset.name === correctAnswerName) {
-        b.classList.add('correct-guess');
-      }
-    });
-    document.getElementById('feedbackMsg').innerText = '✓ benar! hewan ini tidak akan muncul lagi.';
-    lock = true;
-
-    const idxPos = remainingIds.indexOf(currentAnimal.index);
-    if (idxPos !== -1) {
-      remainingIds.splice(idxPos, 1);
-      correctCount++;
-    }
-    updateStatsDisplay();
-  } else {
-    document.getElementById('feedbackMsg').innerText = '✗ kurang tepat, coba lain kali (akan muncul lagi)';
-    lock = true;
-    allButtons.forEach(b => {
-      if (b.dataset.name === selectedName) {
-        b.style.background = '#f6cfcd';
-        setTimeout(() => b.style.background = '', 200);
-      }
-    });
-  }
-}
-      // Event listener tombol next
-  document.getElementById('nextBtn').addEventListener('click', () => {
-    if (remainingIds.length === 0) {
-      renderNewQuestion();
-    } else {
-      renderNewQuestion();
-    }
-  });
-
-  // Fungsi update statistik
-  function updateStatsDisplay() {
-    document.getElementById('remaining-counter').innerText = remainingIds.length;
-    document.getElementById('correct-counter').innerText = correctCount;
-  }
-
-  // Inisialisasi pertama
-  renderNewQuestion();
-})();
-</script>
+        loadQuestion();
+    </script>
 </body>
 </html>
-}
-
-// Acak master list
-masterList = shuffleArray(masterList);
