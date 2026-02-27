@@ -3,129 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Animals - Minimalist Edition</title>
+    <title>Quiz Animals</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
         :root {
-            --bg: #f8f9fa;
-            --accent: #556b2f; /* Sage Green */
-            --text: #2d3436;
+            --bg: #fdfdfd;
+            --card: #ffffff;
+            --accent: #4a7c59; /* Hijau Elegan */
+            --text: #333;
+            --border: #ececec;
         }
+
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: var(--bg);
             color: var(--text);
+            margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             min-height: 100vh;
-            margin: 0;
-        }
-        h1 { font-weight: 300; letter-spacing: 2px; margin-bottom: 30px; }
-        
-        /* Container Gambar */
-        #quiz-container {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            text-align: center;
-            max-width: 500px;
-            width: 90%;
-        }
-        .animal-img {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 15px;
-            margin-bottom: 20px;
+            padding: 20px;
         }
 
-        /* Tombol Pilihan */
+        h1 {
+            font-weight: 300;
+            letter-spacing: 4px;
+            color: #555;
+            margin-top: 40px;
+            text-transform: uppercase;
+        }
+
+        #quiz-card {
+            background: var(--card);
+            width: 100%;
+            max-width: 450px;
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+            border: 1px solid var(--border);
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .img-container {
+            width: 100%;
+            height: 280px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #f0f0f0;
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+        }
+
+        #animal-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s;
+        }
+
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 12px;
         }
-        button {
-            padding: 15px;
-            border: 1px solid #eee;
-            background: white;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 1rem;
-        }
-        button:hover { background: var(--accent); color: white; border-color: var(--accent); }
 
-        /* Fitur Hint */
-        #hint-btn { margin-top: 20px; background: none; border: none; color: #888; text-decoration: underline; font-size: 0.9rem; }
+        button.opt {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        button.opt:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        #hint-box {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #888;
+            min-height: 20px;
+        }
+
+        #hint-link {
+            color: var(--accent);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .stats {
+            margin-top: 15px;
+            font-size: 0.75rem;
+            color: #bbb;
+        }
     </style>
 </head>
 <body>
 
-    <h1>QUIZ ANIMALS</h1>
+    <h1>Quiz Animals</h1>
 
-    <div id="quiz-container">
-        <img id="animal-display" class="animal-img" src="" alt="Tebak Hewan">
-        <div id="hint-text" style="display:none; margin-bottom: 10px; font-style: italic; color: var(--accent);"></div>
+    <div id="quiz-card">
+        <div class="img-container">
+            <img id="animal-img" src="" alt="Animal Image">
+        </div>
+
         <div class="options-grid" id="options">
             </div>
-        <button id="hint-btn" onclick="showHint()">Butuh bantuan? (Hint)</button>
+
+        <div id="hint-box">
+            <span id="hint-link" onclick="revealHint()">Tampilkan Hint</span>
+            <p id="hint-text" style="display:none; margin: 5px 0 0 0; color: #4a7c59; italic;"></p>
+        </div>
+
+        <div class="stats">
+            Sisa Hewan: <span id="remaining">0</span>
+        </div>
     </div>
 
     <script>
-        // Contoh Data (Bisa diperluas hingga 2000+ data)
-        let animals = [
-            { id: 1, name: "Narwhal", type: "Laut", hint: "Memiliki tanduk panjang seperti unicorn.", img: "https://source.unsplash.com/800x600/?narwhal" },
-            { id: 2, name: "Okapi", type: "Darat", hint: "Kerabat jerapah tapi kaki bergaris zebra.", img: "https://source.unsplash.com/800x600/?okapi" },
-            // Tambahkan data hewan lainnya di sini
+        // Database Contoh (Darat & Laut)
+        // Untuk mencapai 2000, Anda bisa menambahkannya di array ini
+        const animalData = [
+            { name: "Gajah", hint: "Memiliki telinga lebar dan gading.", img: "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=500&q=80" },
+            { name: "Hiu Putih", hint: "Predator laut dengan indra penciuman darah yang tajam.", img: "https://images.unsplash.com/photo-1560273074-c930c7dc9465?w=500&q=80" },
+            { name: "Harimau", hint: "Kucing besar yang suka berenang dan memiliki pola belang.", img: "https://images.unsplash.com/photo-1508817628294-5a453fa0b8fb?w=500&q=80" },
+            { name: "Penyu", hint: "Reptil laut yang bermigrasi ribuan mil.", img: "https://images.unsplash.com/photo-1518467166778-b88f373ffec7?w=500&q=80" },
+            { name: "Zebra", hint: "Kuda liar dengan pola hitam putih yang unik.", img: "https://images.unsplash.com/photo-1501705388883-4ed8a543392c?w=500&q=80" },
+            { name: "Gurita", hint: "Memiliki tiga jantung dan darah berwarna biru.", img: "https://images.unsplash.com/photo-1545671913-b89ac1b4ac10?w=500&q=80" }
         ];
 
-        let masterList = [...animals]; // Database utama
+        let masterList = [...animalData];
+        let currentIdx = null;
 
-        function loadQuestion() {
+        function initQuiz() {
             if (masterList.length === 0) {
-                document.getElementById('quiz-container').innerHTML = "<h2>Selamat! Kamu mengenal semua hewan.</h2>";
+                document.getElementById('quiz-card').innerHTML = "<h3>Selesai! Kamu sangat hebat mengenal hewan.</h3>";
                 return;
             }
 
-            const randomIndex = Math.floor(Math.random() * masterList.length);
-            const currentAnimal = masterList[randomIndex];
+            // Pilih random
+            currentIdx = Math.floor(Math.random() * masterList.length);
+            const currentAnimal = masterList[currentIdx];
 
-            document.getElementById('animal-display').src = currentAnimal.img;
+            // Tampilkan Gambar
+            document.getElementById('animal-img').style.opacity = 0;
+            setTimeout(() => {
+                document.getElementById('animal-img').src = currentAnimal.img;
+                document.getElementById('animal-img').style.opacity = 1;
+            }, 200);
+
+            // Reset Hint
+            document.getElementById('hint-text').innerText = currentAnimal.hint;
             document.getElementById('hint-text').style.display = 'none';
-            document.getElementById('hint-text').innerText = "Hint: " + currentAnimal.hint;
+            document.getElementById('hint-link').style.display = 'inline';
 
-            // Logika Options (Acak jawaban)
-            const options = [currentAnimal.name, "Singa", "Paus Biru", "Kuda Nil"]; // Placeholder salah
-            const shuffledOptions = options.sort(() => Math.random() - 0.5);
+            // Generate Opsi (1 Benar + 3 Acak)
+            let choices = [currentAnimal.name];
+            while(choices.length < 4) {
+                let randomName = animalData[Math.floor(Math.random() * animalData.length)].name;
+                if(!choices.includes(randomName)) choices.push(randomName);
+            }
+            choices.sort(() => Math.random() - 0.5);
 
             const optionsDiv = document.getElementById('options');
             optionsDiv.innerHTML = "";
-            shuffledOptions.forEach(opt => {
+            choices.forEach(choice => {
                 const btn = document.createElement('button');
-                btn.innerText = opt;
-                btn.onclick = () => checkAnswer(opt, currentAnimal.name, randomIndex);
+                btn.className = 'opt';
+                btn.innerText = choice;
+                btn.onclick = () => checkAnswer(choice);
                 optionsDiv.appendChild(btn);
             });
+
+            document.getElementById('remaining').innerText = masterList.length;
         }
 
-        function checkAnswer(selected, correct, index) {
+        function checkAnswer(selected) {
+            const correct = masterList[currentIdx].name;
             if (selected === correct) {
-                alert("Benar! Hewan ini tidak akan muncul lagi.");
-                masterList.splice(index, 1); // Hapus dari daftar jika benar
+                alert("✨ Benar!");
+                masterList.splice(currentIdx, 1); // Hapus dari daftar jika benar
             } else {
-                alert("Salah! Coba lagi nanti.");
+                alert("❌ Salah. Coba lagi!");
+                // Tetap di daftar, akan muncul lagi nanti secara random
             }
-            loadQuestion(); // Muat pertanyaan baru (random)
+            initQuiz();
         }
 
-        function showHint() {
+        function revealHint() {
             document.getElementById('hint-text').style.display = 'block';
+            document.getElementById('hint-link').style.display = 'none';
         }
 
-        loadQuestion();
+        initQuiz();
     </script>
 </body>
 </html>
