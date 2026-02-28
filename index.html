@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz City | Ultimate Luxury</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>Quiz City | Royal Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Plus+Jakarta+Sans:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --matte-black: #0a0a0a;
-            --glossy-black: #161616;
-            --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
-            --gold-solid: #d4af37;
-            --border-gold: rgba(212, 175, 55, 0.4);
-            --shadow: 0 20px 50px rgba(0,0,0,0.9);
+            --matte: #080808;
+            --onyx: #121212;
+            --gold-primary: #d4af37;
+            --gold-glow: rgba(212, 175, 55, 0.4);
+            --gold-gradient: linear-gradient(135deg, #8a6d3b 0%, #d4af37 50%, #f1d592 100%);
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background-color: var(--matte-black);
+            background-color: var(--matte);
             color: #ffffff;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -28,52 +28,53 @@
             overflow: hidden;
         }
 
-        /* Ambient Light Background */
+        /* Elemen Estetik Latar Belakang */
         body::before {
             content: "";
             position: absolute;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 80%);
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #080808 70%);
             z-index: -1;
         }
 
         .container {
-            width: 95%;
-            max-width: 480px;
-            background: var(--glossy-black);
-            padding: 45px 30px;
+            width: 90%;
+            max-width: 450px;
+            background: var(--onyx);
+            padding: 40px 25px;
             border-radius: 40px;
-            border: 1px solid var(--border-gold);
-            box-shadow: var(--shadow), inset 0 0 15px rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 0 30px rgba(212, 175, 55, 0.03);
             text-align: center;
             position: relative;
-            animation: fadeInScale 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: appEntry 1s ease-out;
         }
 
         h1 {
             font-family: 'Cinzel', serif;
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             background: var(--gold-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 5px;
-            margin-bottom: 30px;
-            font-weight: 700;
+            letter-spacing: 6px;
+            margin-bottom: 35px;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.2));
         }
 
-        /* Bingkai Gambar Premium */
-        .img-outer-frame {
+        /* Frame Gambar dengan Glow Simetris */
+        .image-viewport {
             width: 100%;
             height: 280px;
-            padding: 2px;
-            background: var(--gold-gradient);
             border-radius: 25px;
             margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+            padding: 2px;
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.3), transparent);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         }
 
-        .img-inner-frame {
+        .image-inner {
             width: 100%;
             height: 100%;
             background: #000;
@@ -87,24 +88,26 @@
             height: 100%;
             object-fit: cover;
             opacity: 0;
-            transition: opacity 0.8s ease, transform 1.5s ease;
+            transform: scale(1.1);
+            transition: opacity 0.6s ease, transform 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         #city-img.reveal {
-            opacity: 1;
-            transform: scale(1.05);
+            opacity: 0.8;
+            transform: scale(1);
         }
 
-        .country-display {
+        .country-name {
             font-family: 'Cinzel', serif;
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             color: #fff;
             margin-bottom: 30px;
-            letter-spacing: 2px;
-            font-weight: 400;
+            letter-spacing: 3px;
+            display: block;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
-        /* Pilihan Ganda Simetris */
+        /* Grid Tombol Luxury */
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -112,65 +115,66 @@
         }
 
         .btn-opt {
-            background: #111;
-            border: 1px solid #333;
-            padding: 18px 5px;
-            border-radius: 15px;
-            color: #bbb;
+            background: #161616;
+            border: 1px solid #2a2a2a;
+            padding: 18px 10px;
+            border-radius: 18px;
+            color: #999;
             font-size: 0.9rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: var(--transition);
         }
 
         .btn-opt:hover {
-            border-color: var(--gold-solid);
+            border-color: var(--gold-primary);
             color: #fff;
-            background: #1a1a1a;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            background: #1f1f1f;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4), 0 0 15px var(--gold-glow);
         }
 
-        /* Feedback Styles */
+        /* Animasi Feedback */
         .btn-opt.correct {
             background: var(--gold-gradient) !important;
             color: #000 !important;
             border: none !important;
+            box-shadow: 0 0 30px var(--gold-glow);
             transform: scale(1.05);
         }
 
         .btn-opt.wrong {
-            background: #550000 !important;
-            border-color: #ff0000 !important;
+            background: #3d0a0a !important;
+            border-color: #ff3333 !important;
             color: #fff !important;
-            animation: shake 0.4s ease;
+            animation: shake 0.4s;
         }
 
-        .hint-box {
+        .hint-btn {
             margin-top: 30px;
             font-size: 0.8rem;
-            color: #666;
+            color: #555;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             transition: 0.3s;
         }
 
-        .hint-box:hover { color: var(--gold-solid); }
+        .hint-btn:hover { color: var(--gold-primary); }
 
-        #hint-text {
-            color: #d4af37;
-            margin-top: 10px;
+        #hint-display {
+            color: var(--gold-primary);
+            margin-top: 12px;
             font-style: italic;
-            height: 20px;
+            font-size: 0.85rem;
+            min-height: 20px;
         }
 
-        /* Animasi */
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.9) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+        @keyframes appEntry {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         @keyframes shake {
@@ -185,116 +189,109 @@
 <div class="container">
     <h1>Quiz City</h1>
 
-    <div class="img-outer-frame">
-        <div class="img-inner-frame">
-            <img id="city-img" src="" alt="View">
+    <div class="image-viewport">
+        <div class="image-inner">
+            <img id="city-img" src="" alt="Pre-loading...">
         </div>
     </div>
 
-    <div class="country-display" id="country-name">Loading...</div>
+    <div class="country-name" id="country-label">Loading...</div>
 
-    <div class="options-grid" id="options-container"></div>
+    <div class="options-grid" id="options"></div>
 
-    <div class="hint-box" onclick="showHint()">Butuh Bantuan?</div>
-    <div id="hint-text"></div>
+    <div class="hint-btn" onclick="showHint()">Butuh Bantuan?</div>
+    <div id="hint-display"></div>
 </div>
 
 <script>
-    // Database Akurat 195+ Negara (Contoh Terpopuler di Script)
-    const quizData = [
+    const allData = [
         {c: "Indonesia", a: "Jakarta"}, {c: "Jepang", a: "Tokyo"}, {c: "Prancis", a: "Paris"},
-        {c: "Italia", a: "Roma"}, {c: "Inggris", a: "London"}, {c: "Brasil", a: "Brasilia"},
-        {c: "Mesir", a: "Kairo"}, {c: "Kanada", a: "Ottawa"}, {c: "Australia", a: "Canberra"},
-        {c: "Korea Selatan", a: "Seoul"}, {c: "Turki", a: "Ankara"}, {c: "Belanda", a: "Amsterdam"},
-        {c: "Rusia", a: "Moskow"}, {c: "Arab Saudi", a: "Riyadh"}, {c: "Thailand", a: "Bangkok"},
-        {c: "India", a: "New Delhi"}, {c: "Spanyol", a: "Madrid"}, {c: "Jerman", a: "Berlin"},
-        {c: "Malaysia", a: "Kuala Lumpur"}, {c: "Singapura", a: "Singapura"}, {c: "Filipina", a: "Manila"}
+        {c: "Italia", a: "Roma"}, {c: "Brasil", a: "Brasilia"}, {c: "Mesir", a: "Kairo"},
+        {c: "Inggris", a: "London"}, {c: "Amerika Serikat", a: "Washington D.C."}, {c: "Turki", a: "Ankara"},
+        {c: "Korea Selatan", a: "Seoul"}, {c: "Australia", a: "Canberra"}, {c: "Singapura", a: "Singapura"},
+        {c: "Malaysia", a: "Kuala Lumpur"}, {c: "Thailand", a: "Bangkok"}, {c: "Jerman", a: "Berlin"}
     ];
 
+    let pool = [...allData];
     let currentItem = {};
-    let activePool = [...quizData];
     let isAnswering = false;
+    let nextImage = new Image();
 
-    function loadNewQuestion() {
-        if (activePool.length === 0) activePool = [...quizData];
+    function loadNext() {
+        if (pool.length === 0) pool = [...allData];
         isAnswering = false;
         
-        currentItem = activePool[Math.floor(Math.random() * activePool.length)];
+        currentItem = pool[Math.floor(Math.random() * pool.length)];
         
-        const img = document.getElementById('city-img');
-        img.classList.remove('reveal');
-        
-        // SISTEM GAMBAR BARU: Menggunakan Pixabay API (Lebih Akurat & Professional)
-        // Kata kunci: "Cityname city landmark"
-        const apiKey = '49098901-527f67756f7775960098f993d'; // API Key Pixabay
-        const query = encodeURIComponent(currentItem.a + " city architecture landmark");
-        
-        fetch(`https://pixabay.com/api/?key=${apiKey}&q=${query}&image_type=photo&orientation=horizontal&category=places`)
-            .then(res => res.json())
-            .then(data => {
-                if(data.hits.length > 0) {
-                    img.src = data.hits[0].largeImageURL;
-                } else {
-                    // Fallback jika Pixabay kosong
-                    img.src = `https://loremflickr.com/800/600/${currentItem.a},cityscape/all`;
-                }
-                img.onload = () => img.classList.add('reveal');
-            })
-            .catch(() => {
-                img.src = `https://loremflickr.com/800/600/${currentItem.a},cityscape`;
-                img.onload = () => img.classList.add('reveal');
-            });
+        const imgDisplay = document.getElementById('city-img');
+        imgDisplay.classList.remove('reveal');
 
-        document.getElementById('country-name').innerText = currentItem.c;
-        document.getElementById('hint-text').innerText = "";
+        // PRE-FETCHING SYSTEM: Memastikan gambar siap sebelum tampil
+        const imageUrl = `https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=800&q=80`; // Placeholder basic
+        const cityUrl = `https://source.unsplash.com/800x600/?city,architecture,${currentItem.a.replace(/ /g, '-')}`;
+        
+        // Gunakan image object untuk memastikan load tuntas
+        nextImage = new Image();
+        nextImage.src = cityUrl;
+        nextImage.onload = () => {
+            imgDisplay.src = cityUrl;
+            imgDisplay.classList.add('reveal');
+        };
+        // Fallback jika source utama lemot
+        nextImage.onerror = () => {
+            imgDisplay.src = `https://loremflickr.com/800/600/${currentItem.a},city/all`;
+            imgDisplay.classList.add('reveal');
+        };
+
+        document.getElementById('country-label').innerText = currentItem.c;
+        document.getElementById('hint-display').innerText = "";
         
         renderOptions();
     }
 
     function renderOptions() {
-        const container = document.getElementById('options-container');
-        container.innerHTML = "";
+        const grid = document.getElementById('options');
+        grid.innerHTML = "";
         
-        let options = [currentItem.a];
-        while(options.length < 4) {
-            let r = quizData[Math.floor(Math.random() * quizData.length)].a;
-            if(!options.includes(r)) options.push(r);
+        let opts = [currentItem.a];
+        while(opts.length < 4) {
+            let r = allData[Math.floor(Math.random() * allData.length)].a;
+            if(!opts.includes(r)) opts.push(r);
         }
-        options.sort(() => Math.random() - 0.5);
+        opts.sort(() => Math.random() - 0.5);
 
-        options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'btn-opt';
-            btn.innerText = opt;
-            btn.onclick = () => checkAnswer(opt, btn);
-            container.appendChild(btn);
+        opts.forEach(o => {
+            const b = document.createElement('button');
+            b.className = 'btn-opt';
+            b.innerText = o;
+            b.onclick = () => check(o, b);
+            grid.appendChild(b);
         });
     }
 
-    function checkAnswer(val, btn) {
+    function check(val, btn) {
         if(isAnswering) return;
         isAnswering = true;
 
         if(val === currentItem.a) {
             btn.classList.add('correct');
-            activePool = activePool.filter(item => item.c !== currentItem.c);
-            setTimeout(loadNewQuestion, 1500);
+            pool = pool.filter(i => i.c !== currentItem.c);
+            setTimeout(loadNext, 1200);
         } else {
             btn.classList.add('wrong');
-            // Tampilkan yang benar
             Array.from(document.querySelectorAll('.btn-opt')).forEach(b => {
                 if(b.innerText === currentItem.a) b.classList.add('correct');
             });
-            setTimeout(loadNewQuestion, 2500);
+            setTimeout(loadNext, 2200);
         }
     }
 
     function showHint() {
-        document.getElementById('hint-text').innerText = 
-            `Petunjuk: Berawal huruf "${currentItem.a[0]}" dan berakhir huruf "${currentItem.a.slice(-1)}"`;
+        document.getElementById('hint-display').innerText = 
+            `Ibu kota ini diawali huruf "${currentItem.a[0]}" dan terdiri dari ${currentItem.a.length} karakter.`;
     }
 
-    window.onload = loadNewQuestion;
+    window.onload = loadNext;
 </script>
 
 </body>
