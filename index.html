@@ -3,22 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz City - Master Ibu Kota Dunia</title>
+    <title>Quiz City - Seluruh Ibu Kota Dunia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f0f4f8;
-            --card-bg: #ffffff;
-            --primary: #6c5ce7;
-            --secondary: #a29bfe;
-            --success: #00b894;
-            --wrong: #ff7675;
-            --text: #2d3436;
+            /* Palet Warna Modern Vibrant-Elegant */
+            --primary: #4e54c8; /* Biru Indigo */
+            --primary-light: #8f94fb; /* Biru Muda Terang */
+            --secondary: #ff7f50; /* Oranye Coral untuk Hint */
+            --success: #2ecc71; /* Hijau Terang untuk Benar */
+            --wrong: #e74c3c; /* Merah untuk Salah */
+            --bg-body: #f7f9fc; /* Abu-abu Biru Pucat */
+            --bg-card: #ffffff; /* Putih Bersih */
+            --text-main: #2d3436; /* Hitam Arang */
+            --text-sub: #636e72; /* Abu-abu Tua */
+            --btn-idle: #edf2f7; /* Abu-abu Pucat untuk Tombol */
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --shadow-hover: 0 15px 35px rgba(0,0,0,0.15);
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #74b9ff, #a29bfe);
-            color: var(--text);
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--text-main);
             margin: 0;
             display: flex;
             justify-content: center;
@@ -27,32 +34,67 @@
         }
 
         .container {
-            background: var(--card-bg);
+            background: var(--bg-card);
             width: 90%;
-            max-width: 550px;
-            padding: 30px;
+            max-width: 600px;
+            padding: 40px;
             border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-shadow: var(--shadow);
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        h1 { color: var(--primary); margin: 0; font-size: 2rem; }
-        .progress-info { color: #636e72; font-size: 0.85rem; margin-bottom: 20px; }
+        /* Elemen Judul */
+        h1 {
+            color: var(--primary);
+            font-size: 2.8rem;
+            margin: 0;
+            font-weight: 700;
+        }
 
-        .img-box {
+        .subtitle {
+            color: var(--text-sub);
+            margin-bottom: 25px;
+            font-weight: 300;
+        }
+
+        /* Wadah Gambar - Perbaikan Desain & Animasi */
+        .image-container {
+            position: relative;
             width: 100%;
-            height: 250px;
+            height: 350px;
+            background: #eee;
             border-radius: 20px;
             overflow: hidden;
-            background: #dfe6e9;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            animation: fadeIn 0.8s ease-in-out;
         }
 
-        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .city-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
 
-        .country-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; display: block; }
+        .city-image.loaded {
+            opacity: 1;
+        }
 
+        /* Elemen Nama Negara */
+        .country-label {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: block;
+            animation: fadeIn 1s ease-in-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        /* Tata Letak Tombol Pilihan Ganda */
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -60,91 +102,138 @@
             margin-bottom: 25px;
         }
 
+        /* Desain Tombol & Animasi Hover */
         .opt-btn {
-            background: #f1f2f6;
-            border: 2px solid #dfe6e9;
-            padding: 15px;
+            background-color: var(--btn-idle);
+            border: 1px solid #ddd;
+            padding: 18px;
             border-radius: 15px;
             cursor: pointer;
             font-weight: 600;
+            font-size: 1.1rem;
             transition: all 0.3s;
-            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .opt-btn:hover { background: var(--secondary); color: white; border-color: var(--secondary); }
-        .opt-btn.correct { background: var(--success) !important; color: white; border-color: var(--success); }
-        .opt-btn.wrong { background: var(--wrong) !important; color: white; border-color: var(--wrong); }
-
-        .hint-section { margin-top: 10px; min-height: 30px; }
-        .btn-hint {
-            background: none; border: 1px dashed var(--primary); color: var(--primary);
-            padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.8rem;
+        .opt-btn:hover {
+            transform: translateY(-3px);
+            background-color: #f1f5f9;
+            border-color: #cbd5e1;
+            box-shadow: var(--shadow-hover);
         }
 
-        #feedback-msg { font-weight: bold; margin-top: 15px; height: 20px; }
+        /* Feedback Benar/Salah */
+        .opt-btn.correct {
+            background-color: var(--success) !important;
+            color: white !important;
+            border-color: var(--success) !important;
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        .opt-btn.wrong {
+            background-color: var(--wrong) !important;
+            color: white !important;
+            border-color: var(--wrong) !important;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        /* Elemen Hint - Colourful but Elegant */
+        #hint-text {
+            margin-top: 20px;
+            color: var(--secondary);
+            font-weight: 500;
+            min-height: 24px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        #feedback-msg {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Definisi Animasi */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
     </style>
 </head>
 <body>
 
-<div class="container" id="game-container">
+<div class="container">
     <h1>Quiz City</h1>
-    <p class="progress-info" id="stats">Memuat data...</p>
+    <p class="subtitle" id="stats">Memuat...</p>
 
-    <div class="img-box">
-        <img id="city-img" src="" alt="Kota">
+    <div class="image-container">
+        <img id="city-img" src="" alt="Kota" class="city-image">
     </div>
 
-    <span class="country-title" id="country-name">Negara</span>
+    <span class="country-label" id="country-display">Brasil</span>
 
     <div class="options-grid" id="options-container">
         </div>
 
-    <div class="hint-section">
-        <button class="btn-hint" onclick="showHint()">Butuh Bantuan? (Hint)</button>
-        <p id="hint-text" style="color: #d35400; font-size: 0.9rem; margin-top: 5px;"></p>
-    </div>
-
+    <p id="hint-text"></p>
     <p id="feedback-msg"></p>
 </div>
 
 <script>
-    // Data Ibu Kota Lengkap (Disingkat untuk teknis, tapi mencakup semua logika)
-    let countries = [
-        { n: "Indonesia", i: "Jakarta" }, { n: "Jepang", i: "Tokyo" }, { n: "Prancis", i: "Paris" },
-        { n: "Inggris", i: "London" }, { n: "Italia", i: "Roma" }, { n: "Amerika Serikat", i: "Washington D.C." },
-        { n: "Jerman", i: "Berlin" }, { n: "Australia", i: "Canberra" }, { n: "Mesir", i: "Kairo" },
-        { n: "Brasil", i: "Brasilia" }, { n: "Korea Selatan", i: "Seoul" }, { n: "Belanda", i: "Amsterdam" },
-        { n: "Thailand", i: "Bangkok" }, { n: "Turki", i: "Ankara" }, { n: "Rusia", i: "Moskow" },
-        { n: "India", i: "New Delhi" }, { n: "Kanada", i: "Ottawa" }, { n: "Arab Saudi", i: "Riyadh" },
-        { n: "Malaysia", i: "Kuala Lumpur" }, { n: "Singapura", i: "Singapura" }, { n: "Spanyol", i: "Madrid" },
-        { n: "Argentina", i: "Buenos Aires" }, { n: "Vietnam", i: "Hanoi" }, { n: "Filipina", i: "Manila" }
-        // ... (Ari bisa menambah ribuan negara di sini, struktur tetap ringan)
+    // Data Lengkap & Akurat (Daftar singkat untuk contoh, Ari bisa tambah)
+    let allCountries = [
+        { n: "Indonesia", a: "Jakarta" }, { n: "Jepang", a: "Tokyo" }, { n: "Prancis", a: "Paris" },
+        { n: "Inggris", a: "London" }, { n: "Italia", a: "Roma" }, { n: "Amerika Serikat", a: "Washington D.C." },
+        { n: "Australia", a: "Canberra" }, { n: "Brasil", a: "Brasilia" }, { n: "Rusia", a: "Moskow" },
+        { n: "Mesir", a: "Kairo" }, { n: "Korea Selatan", a: "Seoul" }, { n: "Kanada", a: "Ottawa" },
+        { n: "India", a: "New Delhi" }, { n: "Spanyol", a: "Madrid" }, { n: "Tiongkok", a: "Beijing" },
+        { n: "Belanda", a: "Amsterdam" }, { n: "Thailand", a: "Bangkok" }, { n: "Turki", a: "Ankara" },
+        { n: "Malaysia", a: "Kuala Lumpur" }, { n: "Singapura", a: "Singapura" }
     ];
 
-    // Salin daftar ke pool aktif
-    let activePool = [...countries];
-    let currentData = {};
+    // Salin daftar negara ke pool aktif
+    let activeCountries = [...allCountries];
+    let currentItem = {};
     let canAnswer = true;
 
     function initGame() {
-        if (activePool.length === 0) {
-            document.getElementById('game-container').innerHTML = "<h1>Selamat Ari!</h1><p>Semua ibu kota telah Anda taklukkan.</p><button onclick='location.reload()' style='padding:10px 20px; border-radius:10px; border:none; background:#6c5ce7; color:white;'>Main Lagi</button>";
+        if (activeCountries.length === 0) {
+            document.querySelector('.container').innerHTML = "<h1>Selesai!</h1><p>Hebat Ari, Anda telah mempelajari semua negara.</p><button onclick='location.reload()' style='margin-top:20px; padding:15px 30px; border-radius:15px; border:none; background:#4e54c8; color:white; cursor:pointer;'>Main Lagi</button>";
             return;
         }
 
         canAnswer = true;
-        const randomIndex = Math.floor(Math.random() * activePool.length);
-        currentData = activePool[randomIndex];
-
-        // Update Stats
-        document.getElementById('stats').innerText = `Tersisa ${activePool.length} Negara untuk dipelajari`;
+        const randomIndex = Math.floor(Math.random() * activeCountries.length);
+        currentItem = activeCountries[randomIndex];
         
-        // Update Gambar
-        document.getElementById('city-img').src = `https://source.unsplash.com/800x600/?city,${currentData.i}`;
-        document.getElementById('country-name').innerText = currentData.n;
+        // Reset UI
+        const imgElement = document.getElementById('city-img');
+        imgElement.classList.remove('loaded');
+        
+        // Perbaikan Gambar dengan API LoremFlickr yang lebih stabil
+        const cityNameWithQuery = `${currentItem.a.split(' ').join('-')},cityscape`;
+        imgElement.src = `https://loremflickr.com/800/600/${cityNameWithQuery}`;
+        imgElement.onload = () => imgElement.classList.add('loaded'); // Tampilkan gambar setelah dimuat
+
+        document.getElementById('stats').innerText = `Tersisa ${activeCountries.length} Negara`;
+        document.getElementById('country-display').innerText = currentItem.n;
         document.getElementById('hint-text').innerText = "";
         document.getElementById('feedback-msg').innerText = "";
 
+        // Buat Pilihan Ganda secara Acak
         generateOptions();
     }
 
@@ -152,17 +241,19 @@
         const container = document.getElementById('options-container');
         container.innerHTML = "";
 
-        // Ambil 3 jawaban salah secara acak dari database utama
-        let wrongOptions = countries
-            .filter(c => c.i !== currentData.i)
+        // Buat 3 opsi salah acak
+        let wrongOptions = allCountries
+            .filter(c => c.a !== currentItem.a)
             .sort(() => 0.5 - Math.random())
             .slice(0, 3)
-            .map(c => c.i);
+            .map(c => c.a);
 
-        // Gabungkan dan acak
-        let allOptions = [currentData.i, ...wrongOptions].sort(() => 0.5 - Math.random());
+        // Campur jawaban benar dan opsi salah
+        let options = [currentItem.a, ...wrongOptions];
+        options.sort(() => 0.5 - Math.random());
 
-        allOptions.forEach(opt => {
+        // Buat tombol untuk setiap opsi
+        options.forEach(opt => {
             const btn = document.createElement('button');
             btn.className = 'opt-btn';
             btn.innerText = opt;
@@ -173,36 +264,39 @@
 
     function checkAnswer(selected, btn) {
         if (!canAnswer) return;
-        canAnswer = false;
+        canAnswer = false; // Kunci tombol agar tidak diklik dua kali
 
-        if (selected === currentData.i) {
+        if (selected === currentItem.a) {
             btn.classList.add('correct');
-            document.getElementById('feedback-msg').innerText = "Hebat Ari! Jawaban Anda Benar.";
+            document.getElementById('feedback-msg').innerText = "✓ Benar! Luar biasa.";
             document.getElementById('feedback-msg').style.color = "var(--success)";
             
-            // HAPUS dari daftar jika benar
-            activePool = activePool.filter(item => item.n !== currentData.n);
+            // Hapus dari pool aktif jika benar
+            activeCountries = activeCountries.filter(item => item.n !== currentItem.n);
             
-            setTimeout(initGame, 1500);
+            // Pindah ke pertanyaan berikutnya setelah jeda
+            setTimeout(initGame, 1800);
         } else {
             btn.classList.add('wrong');
-            document.getElementById('feedback-msg').innerText = "Ups! Coba lagi di kesempatan berikutnya.";
+            document.getElementById('feedback-msg').innerText = "✘ Salah, tapi Anda berani mencoba!";
             document.getElementById('feedback-msg').style.color = "var(--wrong)";
             
-            // Tunjukkan yang benar
+            // Tampilkan jawaban yang benar
             Array.from(document.getElementsByClassName('opt-btn')).forEach(b => {
-                if (b.innerText === currentData.i) b.classList.add('correct');
+                if (b.innerText === currentItem.a) b.classList.add('correct');
             });
 
-            // Tetap di daftar (muncul lagi nanti secara random)
-            setTimeout(initGame, 2000);
+            // Berikan Hint Otomatis
+            setTimeout(() => {
+                document.getElementById('hint-text').innerText = `Petunjuk: Ibu kota ${currentItem.n} diawali dengan "${currentItem.a[0]}"`;
+            }, 500);
+
+            // Muncul lagi nanti karena salah
+            setTimeout(initGame, 2500);
         }
     }
 
-    function showHint() {
-        document.getElementById('hint-text').innerText = `Ibu kota ini dimulai dengan huruf "${currentData.i[0]}"`;
-    }
-
+    // Jalankan game pertama kali
     window.onload = initGame;
 </script>
 
