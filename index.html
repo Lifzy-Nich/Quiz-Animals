@@ -3,221 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Animals | Premium Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Quiz City - Master Ibu Kota Dunia</title>
     <style>
         :root {
-            --primary: #2d3436;
-            --accent: #00b894; /* Hijau Emerald Profesional */
-            --bg: #f8f9fa;
+            --bg: #f0f4f8;
             --card-bg: #ffffff;
-            --text-main: #2d3436;
-            --text-sub: #636e72;
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --success: #00b894;
+            --wrong: #ff7675;
+            --text: #2d3436;
         }
 
-        * { box-sizing: border-box; transition: all 0.3s ease; }
-
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            color: var(--text);
             margin: 0;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             min-height: 100vh;
         }
 
         .container {
-            width: 100%;
-            max-width: 500px;
-            padding: 20px;
+            background: var(--card-bg);
+            width: 90%;
+            max-width: 550px;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             text-align: center;
         }
 
-        .brand-title {
-            font-weight: 300;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            margin-bottom: 25px;
-            font-size: 1.4rem;
-            color: var(--primary);
-        }
+        h1 { color: var(--primary); margin: 0; font-size: 2rem; }
+        .progress-info { color: #636e72; font-size: 0.85rem; margin-bottom: 20px; }
 
-        .quiz-card {
-            background: var(--card-bg);
-            border-radius: 24px;
-            padding: 24px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.04);
-            border: 1px solid #eee;
-        }
-
-        .image-wrapper {
+        .img-box {
             width: 100%;
-            height: 320px;
-            border-radius: 18px;
+            height: 250px;
+            border-radius: 20px;
             overflow: hidden;
-            background: #eee;
-            margin-bottom: 24px;
+            background: #dfe6e9;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
         }
 
-        #animal-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .country-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; display: block; }
 
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
-        .btn-opt {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            padding: 16px;
-            border-radius: 12px;
+        .opt-btn {
+            background: #f1f2f6;
+            border: 2px solid #dfe6e9;
+            padding: 15px;
+            border-radius: 15px;
             cursor: pointer;
-            font-family: inherit;
-            font-size: 0.9rem;
-            font-weight: 400;
-            color: var(--text-main);
-        }
-
-        .btn-opt:hover {
-            border-color: var(--accent);
-            background: var(--accent);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .hint-section {
-            margin-top: 20px;
-            min-height: 50px;
-        }
-
-        #hint-link {
-            font-size: 0.75rem;
-            color: var(--accent);
-            text-decoration: none;
             font-weight: 600;
-            cursor: pointer;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            transition: all 0.3s;
+            font-size: 0.95rem;
         }
 
-        #hint-text {
-            display: none;
-            font-size: 0.85rem;
-            color: var(--text-sub);
-            margin-top: 8px;
-            font-style: italic;
+        .opt-btn:hover { background: var(--secondary); color: white; border-color: var(--secondary); }
+        .opt-btn.correct { background: var(--success) !important; color: white; border-color: var(--success); }
+        .opt-btn.wrong { background: var(--wrong) !important; color: white; border-color: var(--wrong); }
+
+        .hint-section { margin-top: 10px; min-height: 30px; }
+        .btn-hint {
+            background: none; border: 1px dashed var(--primary); color: var(--primary);
+            padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.8rem;
         }
 
-        .stats {
-            margin-top: 20px;
-            font-size: 0.7rem;
-            color: #b2bec3;
-            letter-spacing: 1px;
-        }
+        #feedback-msg { font-weight: bold; margin-top: 15px; height: 20px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="brand-title">Quiz Animals</div>
+<div class="container" id="game-container">
+    <h1>Quiz City</h1>
+    <p class="progress-info" id="stats">Memuat data...</p>
 
-        <div class="quiz-card" id="game-container">
-            <div class="image-wrapper">
-                <img id="animal-img" src="" alt="Quiz Image">
-            </div>
-
-            <div class="options-grid" id="options">
-                </div>
-
-            <div class="hint-section">
-                <span id="hint-link" onclick="showHint()">Get a Hint</span>
-                <p id="hint-text"></p>
-            </div>
-
-            <div class="stats">
-                PROGRESS: <span id="remain">0</span> LEFT
-            </div>
-        </div>
+    <div class="img-box">
+        <img id="city-img" src="" alt="Kota">
     </div>
 
-    <script>
-        // Data Sample - Ari bisa menambahkan hingga 2000 data di sini
-        const database = [
-            { name: "Lion", hint: "Si raja hutan dengan rambut lebat.", img: "https://images.unsplash.com/photo-1614027126733-75768ca63ee1?w=600&auto=format" },
-            { name: "Orca", hint: "Mamalia laut hitam putih yang sangat cerdas.", img: "https://images.unsplash.com/photo-1554110397-9bac083977c6?w=600&auto=format" },
-            { name: "Red Panda", hint: "Hewan mirip rubah tapi berukuran kecil dan berbulu merah.", img: "https://images.unsplash.com/photo-1544239649-4238bf797e5c?w=600&auto=format" },
-            { name: "Great White Shark", hint: "Predator laut dengan barisan gigi tajam.", img: "https://images.unsplash.com/photo-1560273074-c930c7dc9465?w=600&auto=format" },
-            { name: "Zebra", hint: "Kuda liar dengan pola garis hitam-putih.", img: "https://images.unsplash.com/photo-1501705388883-4ed8a543392c?w=600&auto=format" },
-            { name: "Green Sea Turtle", hint: "Reptil laut yang cangkangnya keras.", img: "https://images.unsplash.com/photo-1518467166778-b88f373ffec7?w=600&auto=format" }
-        ];
+    <span class="country-title" id="country-name">Negara</span>
 
-        let quizList = [...database];
-        let currentItem = null;
+    <div class="options-grid" id="options-container">
+        </div>
 
-        function loadQuestion() {
-            if (quizList.length === 0) {
-                document.getElementById('game-container').innerHTML = "<h2>Excellent!</h2><p>You have mastered all animals.</p>";
-                return;
-            }
+    <div class="hint-section">
+        <button class="btn-hint" onclick="showHint()">Butuh Bantuan? (Hint)</button>
+        <p id="hint-text" style="color: #d35400; font-size: 0.9rem; margin-top: 5px;"></p>
+    </div>
 
-            const randomIndex = Math.floor(Math.random() * quizList.length);
-            currentItem = quizList[randomIndex];
+    <p id="feedback-msg"></p>
+</div>
 
-            // Render Image
-            const img = document.getElementById('animal-img');
-            img.src = currentItem.img;
+<script>
+    // Data Ibu Kota Lengkap (Disingkat untuk teknis, tapi mencakup semua logika)
+    let countries = [
+        { n: "Indonesia", i: "Jakarta" }, { n: "Jepang", i: "Tokyo" }, { n: "Prancis", i: "Paris" },
+        { n: "Inggris", i: "London" }, { n: "Italia", i: "Roma" }, { n: "Amerika Serikat", i: "Washington D.C." },
+        { n: "Jerman", i: "Berlin" }, { n: "Australia", i: "Canberra" }, { n: "Mesir", i: "Kairo" },
+        { n: "Brasil", i: "Brasilia" }, { n: "Korea Selatan", i: "Seoul" }, { n: "Belanda", i: "Amsterdam" },
+        { n: "Thailand", i: "Bangkok" }, { n: "Turki", i: "Ankara" }, { n: "Rusia", i: "Moskow" },
+        { n: "India", i: "New Delhi" }, { n: "Kanada", i: "Ottawa" }, { n: "Arab Saudi", i: "Riyadh" },
+        { n: "Malaysia", i: "Kuala Lumpur" }, { n: "Singapura", i: "Singapura" }, { n: "Spanyol", i: "Madrid" },
+        { n: "Argentina", i: "Buenos Aires" }, { n: "Vietnam", i: "Hanoi" }, { n: "Filipina", i: "Manila" }
+        // ... (Ari bisa menambah ribuan negara di sini, struktur tetap ringan)
+    ];
 
-            // Reset Hint
-            document.getElementById('hint-text').innerText = currentItem.hint;
-            document.getElementById('hint-text').style.display = 'none';
-            document.getElementById('hint-link').style.display = 'inline';
+    // Salin daftar ke pool aktif
+    let activePool = [...countries];
+    let currentData = {};
+    let canAnswer = true;
 
-            // Generate Options (1 Right, 3 Random Wrong)
-            let choices = [currentItem.name];
-            while(choices.length < 4) {
-                let randomWrong = database[Math.floor(Math.random() * database.length)].name;
-                if(!choices.includes(randomWrong)) choices.push(randomWrong);
-            }
-            choices.sort(() => Math.random() - 0.5);
+    function initGame() {
+        if (activePool.length === 0) {
+            document.getElementById('game-container').innerHTML = "<h1>Selamat Ari!</h1><p>Semua ibu kota telah Anda taklukkan.</p><button onclick='location.reload()' style='padding:10px 20px; border-radius:10px; border:none; background:#6c5ce7; color:white;'>Main Lagi</button>";
+            return;
+        }
 
-            const optDiv = document.getElementById('options');
-            optDiv.innerHTML = "";
-            choices.forEach(c => {
-                const btn = document.createElement('button');
-                btn.className = 'btn-opt';
-                btn.innerText = c;
-                btn.onclick = () => checkAnswer(c, randomIndex);
-                optDiv.appendChild(btn);
+        canAnswer = true;
+        const randomIndex = Math.floor(Math.random() * activePool.length);
+        currentData = activePool[randomIndex];
+
+        // Update Stats
+        document.getElementById('stats').innerText = `Tersisa ${activePool.length} Negara untuk dipelajari`;
+        
+        // Update Gambar
+        document.getElementById('city-img').src = `https://source.unsplash.com/800x600/?city,${currentData.i}`;
+        document.getElementById('country-name').innerText = currentData.n;
+        document.getElementById('hint-text').innerText = "";
+        document.getElementById('feedback-msg').innerText = "";
+
+        generateOptions();
+    }
+
+    function generateOptions() {
+        const container = document.getElementById('options-container');
+        container.innerHTML = "";
+
+        // Ambil 3 jawaban salah secara acak dari database utama
+        let wrongOptions = countries
+            .filter(c => c.i !== currentData.i)
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 3)
+            .map(c => c.i);
+
+        // Gabungkan dan acak
+        let allOptions = [currentData.i, ...wrongOptions].sort(() => 0.5 - Math.random());
+
+        allOptions.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(opt, btn);
+            container.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selected, btn) {
+        if (!canAnswer) return;
+        canAnswer = false;
+
+        if (selected === currentData.i) {
+            btn.classList.add('correct');
+            document.getElementById('feedback-msg').innerText = "Hebat Ari! Jawaban Anda Benar.";
+            document.getElementById('feedback-msg').style.color = "var(--success)";
+            
+            // HAPUS dari daftar jika benar
+            activePool = activePool.filter(item => item.n !== currentData.n);
+            
+            setTimeout(initGame, 1500);
+        } else {
+            btn.classList.add('wrong');
+            document.getElementById('feedback-msg').innerText = "Ups! Coba lagi di kesempatan berikutnya.";
+            document.getElementById('feedback-msg').style.color = "var(--wrong)";
+            
+            // Tunjukkan yang benar
+            Array.from(document.getElementsByClassName('opt-btn')).forEach(b => {
+                if (b.innerText === currentData.i) b.classList.add('correct');
             });
 
-            document.getElementById('remain').innerText = quizList.length;
+            // Tetap di daftar (muncul lagi nanti secara random)
+            setTimeout(initGame, 2000);
         }
+    }
 
-        function checkAnswer(selected, index) {
-            if (selected === currentItem.name) {
-                alert("✨ Correct! This animal is now learned.");
-                quizList.splice(index, 1); // Benar: hapus dari daftar
-            } else {
-                alert("❌ Incorrect. Keep trying!");
-                // Salah: tidak dihapus, akan muncul lagi nanti secara random
-            }
-            loadQuestion();
-        }
+    function showHint() {
+        document.getElementById('hint-text').innerText = `Ibu kota ini dimulai dengan huruf "${currentData.i[0]}"`;
+    }
 
-        function showHint() {
-            document.getElementById('hint-text').style.display = 'block';
-            document.getElementById('hint-link').style.display = 'none';
-        }
+    window.onload = initGame;
+</script>
 
-        window.onload = loadQuestion;
-    </script>
 </body>
 </html>
