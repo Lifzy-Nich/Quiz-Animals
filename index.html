@@ -3,296 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz City | Royal Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Plus+Jakarta+Sans:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>Tebak Hewan</title>
     <style>
-        :root {
-            --matte: #080808;
-            --onyx: #121212;
-            --gold-primary: #d4af37;
-            --gold-glow: rgba(212, 175, 55, 0.4);
-            --gold-gradient: linear-gradient(135deg, #8a6d3b 0%, #d4af37 50%, #f1d592 100%);
-            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
         body {
-            background-color: var(--matte);
-            color: #ffffff;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
+            color: #333;
         }
-
-        /* Elemen Estetik Latar Belakang */
-        body::before {
-            content: "";
-            position: absolute;
-            width: 150%;
-            height: 150%;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #080808 70%);
-            z-index: -1;
-        }
-
-        .container {
+        .game-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             width: 90%;
-            max-width: 450px;
-            background: var(--onyx);
-            padding: 40px 25px;
-            border-radius: 40px;
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 0 30px rgba(212, 175, 55, 0.03);
+            max-width: 800px;
+            padding: 30px;
             text-align: center;
-            position: relative;
-            animation: appEntry 1s ease-out;
         }
-
         h1 {
-            font-family: 'Cinzel', serif;
-            font-size: 2.4rem;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 6px;
-            margin-bottom: 35px;
-            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.2));
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2.5em;
         }
-
-        /* Frame Gambar dengan Glow Simetris */
-        .image-viewport {
-            width: 100%;
-            height: 280px;
-            border-radius: 25px;
-            margin-bottom: 30px;
-            position: relative;
-            padding: 2px;
-            background: linear-gradient(180deg, rgba(212, 175, 55, 0.3), transparent);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        .question-box {
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2c3e50;
         }
-
-        .image-inner {
+        .image-container {
+            margin: 20px auto;
             width: 100%;
-            height: 100%;
-            background: #000;
-            border-radius: 23px;
+            max-width: 600px;
+            height: 400px;
             overflow: hidden;
-            position: relative;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
-
-        #city-img {
+        #animal-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0;
-            transform: scale(1.1);
-            transition: opacity 0.6s ease, transform 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition: opacity 0.3s ease;
         }
-
-        #city-img.reveal {
-            opacity: 0.8;
-            transform: scale(1);
-        }
-
-        .country-name {
-            font-family: 'Cinzel', serif;
-            font-size: 1.7rem;
-            color: #fff;
-            margin-bottom: 30px;
-            letter-spacing: 3px;
-            display: block;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-        }
-
-        /* Grid Tombol Luxury */
-        .options-grid {
+        .options-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
+            margin: 20px 0;
         }
-
-        .btn-opt {
-            background: #161616;
-            border: 1px solid #2a2a2a;
-            padding: 18px 10px;
-            border-radius: 18px;
-            color: #999;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
+        .option-btn {
+            padding: 15px;
+            font-size: 1.2em;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.3s ease;
         }
-
-        .btn-opt:hover {
-            border-color: var(--gold-primary);
-            color: #fff;
-            background: #1f1f1f;
-            transform: translateY(-4px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4), 0 0 15px var(--gold-glow);
+        .option-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
         }
-
-        /* Animasi Feedback */
-        .btn-opt.correct {
-            background: var(--gold-gradient) !important;
-            color: #000 !important;
-            border: none !important;
-            box-shadow: 0 0 30px var(--gold-glow);
-            transform: scale(1.05);
+        .option-btn.correct {
+            background-color: #2ecc71;
         }
-
-        .btn-opt.wrong {
-            background: #3d0a0a !important;
-            border-color: #ff3333 !important;
-            color: #fff !important;
-            animation: shake 0.4s;
+        .option-btn.incorrect {
+            background-color: #e74c3c;
         }
-
-        .hint-btn {
-            margin-top: 30px;
-            font-size: 0.8rem;
-            color: #555;
+        .feedback {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 20px 0;
+            min-height: 30px;
+        }
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .btn-restart {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            background-color: #9b59b6;
+            color: white;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: 0.3s;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
         }
-
-        .hint-btn:hover { color: var(--gold-primary); }
-
-        #hint-display {
-            color: var(--gold-primary);
-            margin-top: 12px;
-            font-style: italic;
-            font-size: 0.85rem;
-            min-height: 20px;
-        }
-
-        @keyframes appEntry {
-            from { opacity: 0; transform: translateY(30px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-8px); }
-            75% { transform: translateX(8px); }
+        .btn-restart:hover {
+            background-color: #8e44ad;
         }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <h1>Quiz City</h1>
-
-    <div class="image-viewport">
-        <div class="image-inner">
-            <img id="city-img" src="" alt="Pre-loading...">
+    <div class="game-container">
+        <h1>Tebak Hewan</h1>
+        <div class="question-box">Hewan apakah ini?</div>
+        <div class="image-container">
+            <img id="animal-image" src="" alt="Gambar Hewan">
         </div>
+        <div class="options-container" id="options-container"></div>
+        <div class="feedback" id="feedback"></div>
+        <div class="score-board">
+            <div>Skor: <span id="score">0</span></div>
+            <div>Sisa Nyawa: <span id="lives">3</span></div>
+            <div>Benar Berturut-turut: <span id="streak">0</span></div>
+        </div>
+        <button class="btn-restart" onclick="restartGame()">Main Lagi</button>
     </div>
 
-    <div class="country-name" id="country-label">Loading...</div>
+    <script>
+        const animals = [
+            { name: "Gajah", scientificName: "elephant", clue: "Memiliki belalai panjang dan gading." },
+            { name: "Harimau", scientificName: "tiger", clue: "Bertubuh besar dengan corak belang putih-hitam." },
+            { name: "Beruang Kutub", scientificName: "polar bear", clue: "Berbulu putih tebal dan tinggal di daerah kutub." },
+            { name: "Kucing", scientificName: "cat", clue: "Peliharaan rumah dengan telinga runcing dan ekor panjang." },
+            { name: "Anjing", scientificName: "dog", clue: "Teman setia manusia dengan indera penciuman tajam." },
+            { name: "Kuda", scientificName: "horse", clue: "Berkaki empat dengan surai di leher." },
+            { name: "Ayam", scientificName: "chicken", clue: "Unggas yang sering dipelihara untuk telur." },
+            { name: "Sapi", scientificName: "cow", clue: "Berkaki empat menghasilkan susu." },
+            { name: "Domba", scientificName: "sheep", clue: "Berbulu tebal dan menghasilkan wol." },
+            { name: "Kambing", scientificName: "goat", clue: "Memiliki jenggot dan suka memanjat." },
+            { name: "Babi", scientificName: "pig", clue: "Bertubuh besar dengan moncong panjang." },
+            { name: "Burung", scientificName: "bird", clue: "Memiliki sayap dan bisa terbang." },
+            { name: "Ikan", scientificName: "fish", clue: "Hidup di air dan bernapas dengan insang." },
+            { name: "Ular", scientificName: "snake", clue: "Bertubuh panjang tanpa kaki." },
+            { name: "Kura-kura", scientificName: "turtle", clue: "Memiliki tempurung keras dan berjalan lambat." },
+            { name: "Kera", scientificName: "monkey", clue: "Aktif dan suka memanjat pohon." },
+            { name: "Zebra", scientificName: "zebra", clue: "Bergaris hitam-putih seperti kuda." },
+            { name: "Jerapah", scientificName: "giraffe", clue: "Memiliki leher sangat panjang." },
+            { name: "Singa", scientificName: "lion", clue: "Raja hutan dengan surai tebal." },
+            { name: "Panda", scientificName: "panda bear", clue: "Berbulu hitam-putih dan pemakan bambu." },
+            { name: "Cheetah", scientificName: "cheetah", clue: "Hewan darat tercepat dengan bintik-bintik." },
+            { name: "Macan Tutul", scientificName: "leopard", clue: "Bertubuh ramping dengan pola bercak khas." },
+            { name: "Badak", scientificName: "rhinoceros", clue: "Bertubuh besar dengan satu atau dua tanduk." },
+            { name: "Kuda Nil", scientificName: "hippopotamus", clue: "Sangat besar dan menghabiskan waktu di air." },
+            { name: "Buaya", scientificName: "crocodile", clue: "Reptil besar dengan rahang kuat dan sisik keras." },
+            { name: "Komodo", scientificName: "komodo dragon", clue: "Kadal terbesar di dunia dari Indonesia." },
+            { name: "Orangutan", scientificName: "orangutan", clue: "Primata cerdas yang tinggal di hutan Kalimantan." },
+            { name: "Gajah Sumatera", scientificName: "sumatran elephant", clue: "Subspesies gajah dengan ukuran lebih kecil." },
+            { name: "Harimau Sumatera", scientificName: "sumatran tiger", clue: "Spesies harimau yang hanya ada di Sumatra." },
+            { name: "Cendrawasih", scientificName: "bird of paradise", clue: "Burung eksotis dengan bulu indah dari Papua." }
+        ];
 
-    <div class="options-grid" id="options"></div>
+        let currentAnimal = null;
+        let score = 0;
+        let lives = 3;
+        let streak = 0;
+        const maxOptions = 4;
 
-    <div class="hint-btn" onclick="showHint()">Butuh Bantuan?</div>
-    <div id="hint-display"></div>
-</div>
-
-<script>
-    const allData = [
-        {c: "Indonesia", a: "Jakarta"}, {c: "Jepang", a: "Tokyo"}, {c: "Prancis", a: "Paris"},
-        {c: "Italia", a: "Roma"}, {c: "Brasil", a: "Brasilia"}, {c: "Mesir", a: "Kairo"},
-        {c: "Inggris", a: "London"}, {c: "Amerika Serikat", a: "Washington D.C."}, {c: "Turki", a: "Ankara"},
-        {c: "Korea Selatan", a: "Seoul"}, {c: "Australia", a: "Canberra"}, {c: "Singapura", a: "Singapura"},
-        {c: "Malaysia", a: "Kuala Lumpur"}, {c: "Thailand", a: "Bangkok"}, {c: "Jerman", a: "Berlin"}
-    ];
-
-    let pool = [...allData];
-    let currentItem = {};
-    let isAnswering = false;
-    let nextImage = new Image();
-
-    function loadNext() {
-        if (pool.length === 0) pool = [...allData];
-        isAnswering = false;
-        
-        currentItem = pool[Math.floor(Math.random() * pool.length)];
-        
-        const imgDisplay = document.getElementById('city-img');
-        imgDisplay.classList.remove('reveal');
-
-        // PRE-FETCHING SYSTEM: Memastikan gambar siap sebelum tampil
-        const imageUrl = `https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=800&q=80`; // Placeholder basic
-        const cityUrl = `https://source.unsplash.com/800x600/?city,architecture,${currentItem.a.replace(/ /g, '-')}`;
-        
-        // Gunakan image object untuk memastikan load tuntas
-        nextImage = new Image();
-        nextImage.src = cityUrl;
-        nextImage.onload = () => {
-            imgDisplay.src = cityUrl;
-            imgDisplay.classList.add('reveal');
-        };
-        // Fallback jika source utama lemot
-        nextImage.onerror = () => {
-            imgDisplay.src = `https://loremflickr.com/800/600/${currentItem.a},city/all`;
-            imgDisplay.classList.add('reveal');
-        };
-
-        document.getElementById('country-label').innerText = currentItem.c;
-        document.getElementById('hint-display').innerText = "";
-        
-        renderOptions();
-    }
-
-    function renderOptions() {
-        const grid = document.getElementById('options');
-        grid.innerHTML = "";
-        
-        let opts = [currentItem.a];
-        while(opts.length < 4) {
-            let r = allData[Math.floor(Math.random() * allData.length)].a;
-            if(!opts.includes(r)) opts.push(r);
+        function getRandomAnimals(count) {
+            const shuffled = [...animals].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
         }
-        opts.sort(() => Math.random() - 0.5);
 
-        opts.forEach(o => {
-            const b = document.createElement('button');
-            b.className = 'btn-opt';
-            b.innerText = o;
-            b.onclick = () => check(o, b);
-            grid.appendChild(b);
-        });
-    }
+        function getUnsplashImage(animalName) {
+            // Gunakan encodeURIComponent untuk menangani spasi dalam nama ilmiah
+            const keyword = encodeURIComponent(animalName.toLowerCase());
+            // Gunakan random seed besar untuk variasi gambar yang lebih baik
+            const seed = Math.floor(Math.random() * 10000);
+            return `https://source.unsplash.com/1920x1080/?${keyword}&sig=${seed}`;
+        }
 
-    function check(val, btn) {
-        if(isAnswering) return;
-        isAnswering = true;
+        function loadNewQuestion() {
+            const randomAnimals = getRandomAnimals(maxOptions);
+            currentAnimal = randomAnimals[0];
+            
+            document.getElementById('animal-image').src = getUnsplashImage(currentAnimal.scientificName);
+            document.getElementById('animal-image').onerror = function() {
+                this.src = getUnsplashImage(currentAnimal.scientificName); // fallback jika error
+            };
 
-        if(val === currentItem.a) {
-            btn.classList.add('correct');
-            pool = pool.filter(i => i.c !== currentItem.c);
-            setTimeout(loadNext, 1200);
-        } else {
-            btn.classList.add('wrong');
-            Array.from(document.querySelectorAll('.btn-opt')).forEach(b => {
-                if(b.innerText === currentItem.a) b.classList.add('correct');
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            // Acak urutan opsi jawaban
+            const shuffledOptions = [...randomAnimals].sort(() => 0.5 - Math.random());
+
+            shuffledOptions.forEach(animal => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.textContent = animal.name;
+                button.onclick = () => checkAnswer(animal);
+                optionsContainer.appendChild(button);
             });
-            setTimeout(loadNext, 2200);
+
+            document.getElementById('feedback').textContent = '';
         }
-    }
 
-    function showHint() {
-        document.getElementById('hint-display').innerText = 
-            `Ibu kota ini diawali huruf "${currentItem.a[0]}" dan terdiri dari ${currentItem.a.length} karakter.`;
-    }
+        function checkAnswer(selectedAnimal) {
+            const feedbackElement = document.getElementById('feedback');
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            if (selectedAnimal.name === currentAnimal.name) {
+                feedbackElement.textContent = 'Benar!';
+                feedbackElement.style.color = '#2ecc71';
+                
+                // Tandai tombol benar
+                buttons.forEach(btn => {
+                    if (btn.textContent === currentAnimal.name) {
+                        btn.classList.add('correct');
+                    } else {
+                        btn.disabled = true;
+                    }
+                });
+                
+                score += 10;
+                streak++;
+            } else {
+                feedbackElement.textContent = `Salah! Jawabannya adalah ${currentAnimal.name}. ${currentAnimal.clue}`;
+                feedbackElement.style.color = '#e74c3c';
+                
+                // Tandai tombol salah dan benar
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn.textContent === selectedAnimal.name) {
+                        btn.classList.add('incorrect');
+                    }
+                    if (btn.textContent === currentAnimal.name) {
+                        btn.classList.add('correct');
+                    }
+                });
+                
+                lives--;
+                streak = 0;
+            }
+            
+            updateScore();
+            
+            setTimeout(() => {
+                if (lives > 0) {
+                    loadNewQuestion();
+                } else {
+                    endGame();
+                }
+            }, 2000);
+        }
 
-    window.onload = loadNext;
-</script>
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('lives').textContent = lives;
+            document.getElementById('streak').textContent = streak;
+        }
 
+        function endGame() {
+            document.getElementById('feedback').innerHTML = `<div>Game Over! Skor akhir kamu: ${score}</div>`;
+            document.getElementById('options-container').innerHTML = '';
+        }
+
+        function restartGame() {
+            score = 0;
+            lives = 3;
+            streak = 0;
+            updateScore();
+            document.getElementById('feedback').textContent = '';
+            loadNewQuestion();
+        }
+
+        // Inisialisasi game
+        window.onload = loadNewQuestion;
+    </script>
 </body>
 </html>
